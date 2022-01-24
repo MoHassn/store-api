@@ -3,6 +3,7 @@ import { Request, Response } from 'express';
 import User from '../models/user.model';
 import comparePass from './helpers/comparePass';
 import generateHash from './helpers/generateHash';
+import generateJWT from './helpers/generateJWT';
 
 const user = new User();
 
@@ -21,7 +22,9 @@ export const register = async (req: Request, res: Response) => {
   const hashedPassword = await generateHash(password);
   const newUser = { firstName, lastName, email, password: hashedPassword };
   const createdUser = await user.create(newUser);
-  res.send(createdUser);
+  delete createdUser['password'];
+  const token = generateJWT(createdUser);
+  res.send(token);
 };
 
 export const login = async (req: Request, res: Response) => {
@@ -47,5 +50,6 @@ export const login = async (req: Request, res: Response) => {
   }
 
   delete checkUser['password'];
-  return res.send(checkUser);
+  const token = generateJWT(checkUser);
+  return res.send(token);
 };
