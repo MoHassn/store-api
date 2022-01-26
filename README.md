@@ -14,6 +14,7 @@ follow these steps to start the project
   ```
   DB_HOST={your postgresql database host}
   DB_NAME={your postgresql database name}
+  TEST_DB_NAME={your postgresql test database name}
   DB_USER={your postgresql database user}
   DB_PASSWORD={your postgresql database password}
   JWT_SECRET={your jwt secret}
@@ -43,6 +44,7 @@ follow these steps to start the project
 
 - install db-migrate globally by running `npm install -g db-migrate`
 - run `db-migrate up` to create the database tables
+- if you are on windows change the test script in package.json to this `set ENV=test && db-migrate --env test up && jasmine-ts && db-migrate db:drop test`
 - run `npm run watch` to start the development server
 
 ## Required Technologies
