@@ -14,17 +14,31 @@ export const register = async (req: Request, res: Response) => {
       message: 'firstName, lastName, email, and password are required',
     });
   }
-  const checkUser = await user.getByEmail(email);
-  if (checkUser) {
-    return res.status(400).send({ message: 'User already exists' });
+  try {
+    const checkUser = await user.getByEmail(email);
+    if (checkUser) {
+      return res.status(400).send({ message: 'User already exists' });
+    }
+  } catch (e) {
+    console.log('Error wile validating user');
+    res
+      .status(500)
+      .send({ message: 'An Error occurred while validating user' });
   }
 
-  const hashedPassword = await generateHash(password);
-  const newUser = { firstName, lastName, email, password: hashedPassword };
-  const createdUser = await user.create(newUser);
-  delete createdUser['password'];
-  const token = generateJWT(createdUser);
-  res.send(token);
+  try {
+    const hashedPassword = await generateHash(password);
+    const newUser = { firstName, lastName, email, password: hashedPassword };
+    const createdUser = await user.create(newUser);
+    delete createdUser['password'];
+    const token = generateJWT(createdUser);
+    res.send(token);
+  } catch (e) {
+    console.log('Error wile registering user');
+    res
+      .status(500)
+      .send({ message: 'An Error occurred while registering user' });
+  }
 };
 
 export const login = async (req: Request, res: Response) => {
@@ -34,22 +48,28 @@ export const login = async (req: Request, res: Response) => {
       message: 'email, and password are required',
     });
   }
-  const checkUser = await user.getByEmail(email);
-  if (!checkUser) {
-    return res
-      .status(400)
-      .send({ message: 'email or password is not correct' });
-  }
-  // @ts-ignore
-  const isTruePass = await comparePass(password, checkUser.password);
-  console.log(isTruePass);
-  if (!isTruePass) {
-    return res
-      .status(400)
-      .send({ message: 'email or password is not correct' });
-  }
+  try {
+    const checkUser = await user.getByEmail(email);
+    if (!checkUser) {
+      return res
+        .status(400)
+        .send({ message: 'email or password is not correct' });
+    }
 
-  delete checkUser['password'];
-  const token = generateJWT(checkUser);
-  return res.send(token);
+    // @ts-ignore
+    const isTruePass = await comparePass(password, checkUser.password);
+    console.log(isTruePass);
+    if (!isTruePass) {
+      return res
+        .status(400)
+        .send({ message: 'email or password is not correct' });
+    }
+
+    delete checkUser['password'];
+    const token = generateJWT(checkUser);
+    return res.send(token);
+  } catch (e) {
+    console.log('Error wile checking user');
+    res.status(500).send({ message: 'An Error occurred while checking user' });
+  }
 };

@@ -5,6 +5,13 @@ const order = new Order();
 
 export const getUserOpenOrder = async (req: Request, res: Response) => {
   const { id } = req.params;
-  const openOrder = await order.getByUser(id);
-  res.send(openOrder);
+  try {
+    const openOrder = await order.getByUser(id);
+    res.send(openOrder);
+  } catch (e) {
+    console.log("Error wile getting user's order");
+    res
+      .status(500)
+      .send({ message: "An Error occurred while getting user's order" });
+  }
 };
