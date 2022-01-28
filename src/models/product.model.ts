@@ -3,13 +3,13 @@ import client from '../database';
 export type ProductType = {
   id: number;
   name: string;
-  price: string;
+  price: number;
   category?: string;
 };
 
 type NewProduct = {
   name: string;
-  price: string;
+  price: number;
   category?: string;
 };
 

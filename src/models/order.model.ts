@@ -3,7 +3,7 @@ import client from '../database';
 export type OrderType = {
   id: number;
   status: string;
-  user_id: string;
+  user_id: number;
 };
 
 export default class Order {

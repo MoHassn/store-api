@@ -6,8 +6,8 @@ const request = supertest(app);
 describe('Auth Endpoints', () => {
   it('should register a user', async () => {
     const user = {
-      firstName: 'New',
-      lastName: 'User',
+      firstname: 'New',
+      lastname: 'User',
       email: 'email22@gmail.com',
       password: '123',
     };

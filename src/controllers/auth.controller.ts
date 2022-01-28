@@ -8,10 +8,10 @@ import generateJWT from './helpers/generateJWT';
 const user = new User();
 
 export const register = async (req: Request, res: Response) => {
-  const { firstName, lastName, email, password } = req.body;
-  if (!firstName || !lastName || !email || !password) {
+  const { firstname, lastname, email, password } = req.body;
+  if (!firstname || !lastname || !email || !password) {
     return res.status(400).send({
-      message: 'firstName, lastName, email, and password are required',
+      message: 'firstname, lastname, email, and password are required',
     });
   }
   try {
@@ -28,7 +28,7 @@ export const register = async (req: Request, res: Response) => {
 
   try {
     const hashedPassword = await generateHash(password);
-    const newUser = { firstName, lastName, email, password: hashedPassword };
+    const newUser = { firstname, lastname, email, password: hashedPassword };
     const createdUser = await user.create(newUser);
     delete createdUser['password'];
     const token = generateJWT(createdUser);
